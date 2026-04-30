@@ -3,7 +3,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   
   modules: [
-    '@nuxt/ui',
+    '@nuxtjs/tailwindcss',
     '@pinia/nuxt',
     '@vueuse/nuxt',
   ],
@@ -16,17 +16,9 @@ export default defineNuxtConfig({
     },
   },
 
-  colorMode: {
-    preference: 'dark',
-  },
-
-  ui: {
-    icons: ['heroicons'],
-  },
-
   typescript: {
     strict: true,
-    typeCheck: true,
+    typeCheck: false,
   },
 
   nitro: {

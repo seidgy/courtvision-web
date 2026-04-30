@@ -139,6 +139,27 @@ export interface ParlayItem {
   contextAnalysis?: {
     factors: ContextFactor[]
     reasoning: string
+    detailedReasoning?: {
+      summary: string
+      playerName: string
+      betType: string
+      line: number
+      prediction: string
+      predictedValue: number
+      confidence: number
+      considerations: {
+        category: string
+        description: string
+        impact: 'positive' | 'negative' | 'neutral'
+        delta: string
+      }[]
+      keyStats: {
+        recentAverage: string
+        vsOpponentAverage: string
+        trend: string
+        trendChange: string
+      }
+    }
   }
   result: ParlayResult
   actualValue?: number
@@ -147,6 +168,7 @@ export interface ParlayItem {
 export interface Parlay {
   id: string
   userId: string
+  user?: User
   gameId: number
   game: Game
   totalOdds: number

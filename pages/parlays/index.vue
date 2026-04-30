@@ -1,3 +1,4 @@
+
 <template>
   <div class="space-y-8">
     <!-- Header -->
@@ -10,24 +11,24 @@
           Gerencie seus parlays gerados
         </p>
       </div>
-      <UButton
+      <CvButton
         to="/games"
         color="orange"
         icon="i-heroicons-plus"
       >
         Novo Parlay
-      </UButton>
+      </CvButton>
     </div>
 
     <!-- Filters -->
     <div class="flex flex-wrap gap-4">
-      <USelect
+      <CvSelect
         v-model="filters.status"
         :options="statusOptions"
         placeholder="Status"
         class="w-40"
       />
-      <UInput
+      <CvInput
         v-model="searchQuery"
         placeholder="Buscar parlay..."
         icon="i-heroicons-magnifying-glass"
@@ -37,24 +38,24 @@
 
     <!-- Parlays List -->
     <div v-if="parlaysStore.loading" class="space-y-4">
-      <USkeleton v-for="i in 5" :key="i" class="h-48 bg-gray-800" />
+      <CvSkeleton v-for="i in 5" :key="i" class="h-48 bg-gray-800" />
     </div>
 
     <div v-else-if="filteredParlays.length === 0" class="text-center py-16">
-      <UIcon name="i-heroicons-ticket" class="w-16 h-16 text-gray-600 mx-auto mb-4" />
+      <CvIcon name="i-heroicons-ticket" class="w-16 h-16 text-gray-600 mx-auto mb-4" />
       <h3 class="text-xl font-medium text-white mb-2">
         Nenhum parlay encontrado
       </h3>
       <p class="text-gray-400 mb-6">
         Você ainda não gerou nenhum parlay
       </p>
-      <UButton to="/games" color="orange">
+      <CvButton to="/games" color="orange">
         Gerar Meu Primeiro Parlay
-      </UButton>
+      </CvButton>
     </div>
 
     <div v-else class="space-y-4">
-      <UCard
+      <CvCard
         v-for="parlay in filteredParlays"
         :key="parlay.id"
         class="bg-gray-800 border-gray-700 hover:border-gray-600 transition-colors"
@@ -63,19 +64,19 @@
           <!-- Header -->
           <div class="flex items-center justify-between flex-wrap gap-2">
             <div class="flex items-center space-x-3">
-              <UBadge
+              <CvBadge
                 :color="getResultColor(parlay.result)"
                 variant="soft"
                 size="lg"
               >
                 {{ getResultLabel(parlay.result) }}
-              </UBadge>
+              </CvBadge>
               <span class="text-gray-400">
                 {{ formatDate(parlay.createdAt) }}
               </span>
             </div>
             <div class="flex items-center space-x-2">
-              <UButton
+              <CvButton
                 :to="`/parlays/${parlay.id}`"
                 color="gray"
                 variant="soft"
@@ -83,8 +84,8 @@
                 icon="i-heroicons-eye"
               >
                 Ver
-              </UButton>
-              <UButton
+              </CvButton>
+              <CvButton
                 color="red"
                 variant="soft"
                 size="sm"
@@ -92,7 +93,7 @@
                 @click="confirmDelete(parlay)"
               >
                 Excluir
-              </UButton>
+              </CvButton>
             </div>
           </div>
 
@@ -103,13 +104,13 @@
               <span class="text-gray-500">@</span>
               <span class="text-lg font-bold text-white">{{ parlay.game.homeTeam.code }}</span>
             </div>
-            <UBadge
+            <CvBadge
               :color="getGameStatusColor(parlay.game.status)"
               variant="soft"
               size="sm"
             >
               {{ getGameStatusLabel(parlay.game.status) }}
-            </UBadge>
+            </CvBadge>
           </div>
 
           <!-- Parlay Items -->
@@ -120,7 +121,7 @@
               class="flex items-center justify-between"
             >
               <div class="flex items-center space-x-3">
-                <UIcon
+                <CvIcon
                   :name="getItemResultIcon(item.result)"
                   :class="getItemResultColor(item.result)"
                   class="w-5 h-5"
@@ -171,12 +172,12 @@
             </div>
           </div>
         </div>
-      </UCard>
+      </CvCard>
     </div>
 
     <!-- Pagination -->
     <div v-if="parlaysStore.meta && parlaysStore.meta.totalPages > 1" class="flex justify-center">
-      <UPagination
+      <CvPagination
         v-model="page"
         :total="parlaysStore.meta.total"
         :page-count="parlaysStore.meta.limit"
@@ -184,11 +185,11 @@
     </div>
 
     <!-- Delete Confirmation Modal -->
-    <UModal v-model="showDeleteModal">
-      <UCard class="bg-gray-800 border-gray-700">
+    <CvModal v-model="showDeleteModal">
+      <CvCard class="bg-gray-800 border-gray-700">
         <template #header>
           <div class="flex items-center space-x-2">
-            <UIcon name="i-heroicons-exclamation-triangle" class="w-6 h-6 text-red-500" />
+            <CvIcon name="i-heroicons-exclamation-triangle" class="w-6 h-6 text-red-500" />
             <h3 class="text-lg font-medium text-white">Confirmar Exclusão</h3>
           </div>
         </template>
@@ -199,24 +200,24 @@
         
         <template #footer>
           <div class="flex justify-end gap-2">
-            <UButton
+            <CvButton
               color="gray"
               variant="soft"
               @click="showDeleteModal = false"
             >
               Cancelar
-            </UButton>
-            <UButton
+            </CvButton>
+            <CvButton
               color="red"
               :loading="deleting"
               @click="deleteParlay"
             >
               Excluir
-            </UButton>
+            </CvButton>
           </div>
         </template>
-      </UCard>
-    </UModal>
+      </CvCard>
+    </CvModal>
   </div>
 </template>
 
@@ -286,7 +287,7 @@ watch(page, (newPage) => {
 })
 
 // Methods
-function getResultColor(result: string): string {
+function getResultColor(result: string): any {
   const colors: Record<string, string> = {
     PENDING: 'blue',
     WIN: 'green',
@@ -296,7 +297,7 @@ function getResultColor(result: string): string {
   return colors[result] || 'gray'
 }
 
-function getResultLabel(result: string): string {
+function getResultLabel(result: string): any {
   const labels: Record<string, string> = {
     PENDING: 'Pendente',
     WIN: 'Ganho',
@@ -306,7 +307,7 @@ function getResultLabel(result: string): string {
   return labels[result] || result
 }
 
-function getGameStatusColor(status: string): string {
+function getGameStatusColor(status: string): any {
   const colors: Record<string, string> = {
     SCHEDULED: 'blue',
     LIVE: 'green',
@@ -338,7 +339,7 @@ function getItemResultIcon(result: string): string {
   return icons[result] || 'i-heroicons-question-mark-circle'
 }
 
-function getItemResultColor(result: string): string {
+function getItemResultColor(result: string): any {
   const colors: Record<string, string> = {
     PENDING: 'text-gray-400',
     WIN: 'text-green-400',

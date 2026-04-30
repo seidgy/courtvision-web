@@ -4,7 +4,7 @@
       <!-- Logo -->
       <div class="text-center mb-8">
         <div class="w-20 h-20 bg-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-orange-500/30">
-          <UIcon name="i-heroicons-basketball" class="w-12 h-12 text-white" />
+          <CvIcon name="i-heroicons-basketball" class="w-12 h-12 text-white" />
         </div>
         <h1 class="text-3xl font-bold text-white">
           Court<span class="text-orange-500">Vision</span>

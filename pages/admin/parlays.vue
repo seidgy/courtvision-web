@@ -1,3 +1,4 @@
+
 <template>
   <div class="space-y-8">
     <!-- Header -->
@@ -12,13 +13,13 @@
 
     <!-- Filters -->
     <div class="flex flex-wrap gap-4">
-      <USelect
+      <CvSelect
         v-model="filters.status"
         :options="statusOptions"
         placeholder="Status"
         class="w-40"
       />
-      <UInput
+      <CvInput
         v-model="searchQuery"
         placeholder="Buscar parlay..."
         icon="i-heroicons-magnifying-glass"
@@ -27,13 +28,13 @@
     </div>
 
     <!-- Parlays Table -->
-    <UCard class="bg-gray-800 border-gray-700">
+    <CvCard class="bg-gray-800 border-gray-700">
       <div v-if="parlaysStore.loading" class="space-y-4">
-        <USkeleton v-for="i in 5" :key="i" class="h-12 bg-gray-700" />
+        <CvSkeleton v-for="i in 5" :key="i" class="h-12 bg-gray-700" />
       </div>
 
       <div v-else-if="filteredParlays.length === 0" class="text-center py-12">
-        <UIcon name="i-heroicons-ticket" class="w-16 h-16 text-gray-600 mx-auto mb-4" />
+        <CvIcon name="i-heroicons-ticket" class="w-16 h-16 text-gray-600 mx-auto mb-4" />
         <h3 class="text-xl font-medium text-white mb-2">
           Nenhum parlay encontrado
         </h3>
@@ -77,20 +78,20 @@
                 </span>
               </td>
               <td class="px-4 py-3">
-                <UBadge
+                <CvBadge
                   :color="getResultColor(parlay.result)"
                   variant="soft"
                   size="sm"
                 >
                   {{ getResultLabel(parlay.result) }}
-                </UBadge>
+                </CvBadge>
               </td>
               <td class="px-4 py-3 text-gray-400 text-sm">
                 {{ formatDate(parlay.createdAt) }}
               </td>
               <td class="px-4 py-3 text-right">
                 <div class="flex items-center justify-end space-x-2">
-                  <UButton
+                  <CvButton
                     :to="`/parlays/${parlay.id}`"
                     color="gray"
                     variant="soft"
@@ -98,8 +99,8 @@
                     icon="i-heroicons-eye"
                   >
                     Ver
-                  </UButton>
-                  <UButton
+                  </CvButton>
+                  <CvButton
                     v-if="parlay.result === 'PENDING'"
                     color="orange"
                     variant="soft"
@@ -108,7 +109,7 @@
                     @click="openResultModal(parlay)"
                   >
                     Resultado
-                  </UButton>
+                  </CvButton>
                 </div>
               </td>
             </tr>
@@ -118,17 +119,17 @@
 
       <!-- Pagination -->
       <div v-if="parlaysStore.meta && parlaysStore.meta.totalPages > 1" class="flex justify-center mt-6">
-        <UPagination
+        <CvPagination
           v-model="page"
           :total="parlaysStore.meta.total"
           :page-count="parlaysStore.meta.limit"
         />
       </div>
-    </UCard>
+    </CvCard>
 
     <!-- Update Result Modal -->
-    <UModal v-model="showResultModal">
-      <UCard class="bg-gray-800 border-gray-700">
+    <CvModal v-model="showResultModal">
+      <CvCard class="bg-gray-800 border-gray-700">
         <template #header>
           <h3 class="text-lg font-bold text-white">Atualizar Resultado</h3>
         </template>
@@ -141,47 +142,47 @@
             {{ selectedParlay.game.awayTeam.name }} @ {{ selectedParlay.game.homeTeam.name }}
           </p>
 
-          <UFormGroup label="Resultado" name="result">
-            <USelect
+          <CvFormGroup label="Resultado" name="result">
+            <CvSelect
               v-model="resultForm.result"
               :options="resultOptions"
             />
-          </UFormGroup>
+          </CvFormGroup>
 
-          <UFormGroup 
+          <CvFormGroup 
             v-if="resultForm.result === 'WIN'"
             label="Retorno Real" 
             name="actualReturn"
           >
-            <UInput
+            <CvInput
               v-model="resultForm.actualReturn"
               type="number"
               step="0.01"
               placeholder="0.00"
             />
-          </UFormGroup>
+          </CvFormGroup>
         </div>
 
         <template #footer>
           <div class="flex justify-end gap-2">
-            <UButton
+            <CvButton
               color="gray"
               variant="soft"
               @click="showResultModal = false"
             >
               Cancelar
-            </UButton>
-            <UButton
+            </CvButton>
+            <CvButton
               color="orange"
               :loading="updating"
               @click="updateResult"
             >
               Atualizar
-            </UButton>
+            </CvButton>
           </div>
         </template>
-      </UCard>
-    </UModal>
+      </CvCard>
+    </CvModal>
   </div>
 </template>
 
@@ -290,7 +291,7 @@ async function updateResult() {
   updating.value = false
 }
 
-function getResultColor(result: string): string {
+function getResultColor(result: string): any {
   const colors: Record<string, string> = {
     PENDING: 'blue',
     WIN: 'green',
@@ -300,7 +301,7 @@ function getResultColor(result: string): string {
   return colors[result] || 'gray'
 }
 
-function getResultLabel(result: string): string {
+function getResultLabel(result: string): any {
   const labels: Record<string, string> = {
     PENDING: 'Pendente',
     WIN: 'Ganho',
@@ -310,7 +311,7 @@ function getResultLabel(result: string): string {
   return labels[result] || result
 }
 
-function getConfidenceColor(confidence: number): string {
+function getConfidenceColor(confidence: number): any {
   if (confidence >= 70) return 'text-green-400'
   if (confidence >= 50) return 'text-yellow-400'
   return 'text-red-400'

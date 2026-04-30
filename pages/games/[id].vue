@@ -1,43 +1,44 @@
+
 <template>
   <div class="space-y-8">
     <!-- Loading -->
     <div v-if="gamesStore.loading" class="space-y-6">
-      <USkeleton class="h-32 bg-gray-800" />
-      <USkeleton class="h-64 bg-gray-800" />
+      <CvSkeleton class="h-32 bg-gray-800" />
+      <CvSkeleton class="h-64 bg-gray-800" />
     </div>
 
     <template v-else-if="game">
       <!-- Header -->
       <div class="flex items-center justify-between">
-        <UButton
+        <CvButton
           to="/games"
           color="gray"
           variant="ghost"
           icon="i-heroicons-arrow-left"
         >
           Voltar
-        </UButton>
-        <UButton
+        </CvButton>
+        <CvButton
           color="orange"
           icon="i-heroicons-sparkles"
           :loading="parlaysStore.generating"
-          :disabled="game.status !== 'SCHEDULED'"
+          :disabled="game.status !== 'SCHEDULED' && game.status !== 'LIVE'"
           @click="generateParlay"
         >
           Gerar Parlay
-        </UButton>
+        </CvButton>
       </div>
 
       <!-- Game Header Card -->
-      <UCard class="bg-gray-800 border-gray-700">
+      <CvCard class="bg-gray-800 border-gray-700">
         <div class="text-center mb-6">
-          <UBadge
+          <CvBadge
             :color="getStatusColor(game.status)"
             variant="soft"
             size="lg"
           >
             {{ getStatusLabel(game.status) }}
-          </UBadge>
+          </CvBadge>
           <p class="text-gray-400 mt-2">
             {{ formatGameDate(game.gameDate) }}
           </p>
@@ -93,66 +94,64 @@
             <p class="text-white font-medium">{{ game.city || 'N/A' }}</p>
           </div>
         </div>
-      </UCard>
+      </CvCard>
 
       <!-- Players Tabs -->
-      <UTabs :items="tabItems" class="w-full">
-        <template #item="{ item }">
-          <UCard class="bg-gray-800 border-gray-700 mt-4">
-            <div v-if="playersLoading" class="space-y-4">
-              <USkeleton v-for="i in 5" :key="i" class="h-16 bg-gray-700" />
-            </div>
-            
-            <div v-else-if="item.key === 'away' && awayPlayers.length === 0" class="text-center py-8">
-              <p class="text-gray-400">Nenhum jogador encontrado</p>
-            </div>
-            
-            <div v-else-if="item.key === 'home' && homePlayers.length === 0" class="text-center py-8">
-              <p class="text-gray-400">Nenhum jogador encontrado</p>
-            </div>
-            
-            <div v-else class="space-y-2">
-              <div
-                v-for="player in item.key === 'away' ? awayPlayers : homePlayers"
-                :key="player.id"
-                class="flex items-center justify-between p-4 bg-gray-700/50 rounded-lg hover:bg-gray-700 transition-colors"
-              >
-                <div class="flex items-center space-x-4">
-                  <div class="w-10 h-10 bg-gray-600 rounded-full flex items-center justify-center">
-                    <span class="text-lg font-bold text-white">
-                      {{ player.jerseyNumber || '?' }}
-                    </span>
-                  </div>
-                  <div>
-                    <p class="text-white font-medium">
-                      {{ player.firstName }} {{ player.lastName }}
-                    </p>
-                    <p class="text-gray-400 text-sm">
-                      {{ player.position || 'N/A' }} • {{ player.height || '?' }}m
-                    </p>
-                  </div>
-                </div>
-                <UButton
-                  color="orange"
-                  variant="soft"
-                  size="sm"
-                  icon="i-heroicons-chart-bar"
-                  :to="`/games/players/${player.id}`"
-                >
-                  Analisar
-                </UButton>
+      <CvTabs v-model="activeTab" :items="tabItems" class="w-full" />
+      
+      <CvCard class="bg-gray-800 border-gray-700 mt-4">
+        <div v-if="playersLoading" class="space-y-4">
+          <CvSkeleton v-for="i in 5" :key="i" class="h-16 bg-gray-700" />
+        </div>
+        
+        <div v-else-if="activeTab === 'away' && awayPlayers.length === 0" class="text-center py-8">
+          <p class="text-gray-400">Nenhum jogador encontrado</p>
+        </div>
+        
+        <div v-else-if="activeTab === 'home' && homePlayers.length === 0" class="text-center py-8">
+          <p class="text-gray-400">Nenhum jogador encontrado</p>
+        </div>
+        
+        <div v-else class="space-y-2">
+          <div
+            v-for="player in activeTab === 'away' ? awayPlayers : homePlayers"
+            :key="player.id"
+            class="flex items-center justify-between p-4 bg-gray-700/50 rounded-lg hover:bg-gray-700 transition-colors"
+          >
+            <div class="flex items-center space-x-4">
+              <div class="w-10 h-10 bg-gray-600 rounded-full flex items-center justify-center">
+                <span class="text-lg font-bold text-white">
+                  {{ player.jerseyNumber || '?' }}
+                </span>
+              </div>
+              <div>
+                <p class="text-white font-medium">
+                  {{ player.firstName }} {{ player.lastName }}
+                </p>
+                <p class="text-gray-400 text-sm">
+                  {{ player.position || 'N/A' }} • {{ player.height || '?' }}m
+                </p>
               </div>
             </div>
-          </UCard>
-        </template>
-      </UTabs>
+            <CvButton
+              color="orange"
+              variant="soft"
+              size="sm"
+              icon="i-heroicons-chart-bar"
+              :to="`/games/players/${player.id}`"
+            >
+              Analisar
+            </CvButton>
+          </div>
+        </div>
+      </CvCard>
     </template>
 
     <!-- Not Found -->
     <div v-else class="text-center py-16">
-      <UIcon name="i-heroicons-exclamation-triangle" class="w-16 h-16 text-gray-600 mx-auto mb-4" />
+      <CvIcon name="i-heroicons-exclamation-triangle" class="w-16 h-16 text-gray-600 mx-auto mb-4" />
       <h2 class="text-2xl font-bold text-white mb-2">Jogo não encontrado</h2>
-      <UButton to="/games" color="orange">Voltar para jogos</UButton>
+      <CvButton to="/games" color="orange">Voltar para jogos</CvButton>
     </div>
   </div>
 </template>
@@ -178,6 +177,7 @@ const game = computed(() => gamesStore.currentGame)
 const playersLoading = ref(false)
 const awayPlayers = ref<Player[]>([])
 const homePlayers = ref<Player[]>([])
+const activeTab = ref('away')
 
 const tabItems = computed(() => [
   {
@@ -205,13 +205,13 @@ async function loadPlayers() {
   playersLoading.value = true
   
   try {
+    const { $api } = useNuxtApp()
+    
     // Fetch away team players
-    const awayResponse = await fetch(`/api/games/teams/${game.value?.awayTeamId}/players`)
-    awayPlayers.value = await awayResponse.json()
+    awayPlayers.value = await $api.get(`/games/teams/${game.value?.awayTeamId}/players`)
     
     // Fetch home team players
-    const homeResponse = await fetch(`/api/games/teams/${game.value?.homeTeamId}/players`)
-    homePlayers.value = await homeResponse.json()
+    homePlayers.value = await $api.get(`/games/teams/${game.value?.homeTeamId}/players`)
   } catch (error) {
     console.error('Erro ao carregar jogadores:', error)
   } finally {
@@ -223,11 +223,11 @@ async function generateParlay() {
   const parlay = await parlaysStore.generateParlay(gameId)
   
   if (parlay) {
-    navigateTo(`/parlays/${parlay.id}`)
+    navigateTo(`/parlays/${(parlay as any).id}`)
   }
 }
 
-function getStatusColor(status: string): string {
+function getStatusColor(status: string): any {
   const colors: Record<string, string> = {
     SCHEDULED: 'blue',
     LIVE: 'green',
@@ -238,7 +238,7 @@ function getStatusColor(status: string): string {
   return colors[status] || 'gray'
 }
 
-function getStatusLabel(status: string): string {
+function getStatusLabel(status: string): any {
   const labels: Record<string, string> = {
     SCHEDULED: 'Agendado',
     LIVE: 'Ao Vivo',
@@ -249,7 +249,7 @@ function getStatusLabel(status: string): string {
   return labels[status] || status
 }
 
-function getSeasonTypeLabel(type: string): string {
+function getSeasonTypeLabel(type: string): any {
   const labels: Record<string, string> = {
     REGULAR_SEASON: 'Temporada Regular',
     PLAYOFFS: 'Playoffs',
@@ -258,7 +258,7 @@ function getSeasonTypeLabel(type: string): string {
   return labels[type] || type
 }
 
-function formatGameDate(dateString: string): string {
+function formatGameDate(dateString: string): any {
   try {
     const date = parseISO(dateString)
     if (isToday(date)) {

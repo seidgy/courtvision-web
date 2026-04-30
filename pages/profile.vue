@@ -13,122 +13,122 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
       <!-- Profile Info -->
       <div class="lg:col-span-2 space-y-6">
-        <UCard class="bg-gray-800 border-gray-700">
+        <CvCard class="bg-gray-800 border-gray-700">
           <template #header>
             <h2 class="text-lg font-bold text-white">Informações Pessoais</h2>
           </template>
 
-          <UForm
+          <CvForm
             :schema="profileSchema"
             :state="profileForm"
             class="space-y-4"
             @submit="updateProfile"
           >
-            <UFormGroup label="Nome" name="name">
-              <UInput
+            <CvFormGroup label="Nome" name="name">
+              <CvInput
                 v-model="profileForm.name"
                 placeholder="Seu nome completo"
                 icon="i-heroicons-user"
               />
-            </UFormGroup>
+            </CvFormGroup>
 
-            <UFormGroup label="Email" name="email">
-              <UInput
+            <CvFormGroup label="Email" name="email">
+              <CvInput
                 v-model="profileForm.email"
                 type="email"
                 placeholder="seu@email.com"
                 icon="i-heroicons-envelope"
               />
-            </UFormGroup>
+            </CvFormGroup>
 
             <div class="flex justify-end">
-              <UButton
+              <CvButton
                 type="submit"
                 color="orange"
                 :loading="updatingProfile"
               >
                 Salvar Alterações
-              </UButton>
+              </CvButton>
             </div>
-          </UForm>
-        </UCard>
+          </CvForm>
+        </CvCard>
 
         <!-- Change Password -->
-        <UCard class="bg-gray-800 border-gray-700">
+        <CvCard class="bg-gray-800 border-gray-700">
           <template #header>
             <h2 class="text-lg font-bold text-white">Alterar Senha</h2>
           </template>
 
-          <UForm
+          <CvForm
             :schema="passwordSchema"
             :state="passwordForm"
             class="space-y-4"
             @submit="changePassword"
           >
-            <UFormGroup label="Senha Atual" name="currentPassword">
-              <UInput
+            <CvFormGroup label="Senha Atual" name="currentPassword">
+              <CvInput
                 v-model="passwordForm.currentPassword"
                 type="password"
                 placeholder="••••••••"
                 icon="i-heroicons-lock-closed"
               />
-            </UFormGroup>
+            </CvFormGroup>
 
-            <UFormGroup label="Nova Senha" name="newPassword">
-              <UInput
+            <CvFormGroup label="Nova Senha" name="newPassword">
+              <CvInput
                 v-model="passwordForm.newPassword"
                 type="password"
                 placeholder="Mínimo 6 caracteres"
                 icon="i-heroicons-key"
               />
-            </UFormGroup>
+            </CvFormGroup>
 
-            <UFormGroup label="Confirmar Nova Senha" name="confirmPassword">
-              <UInput
+            <CvFormGroup label="Confirmar Nova Senha" name="confirmPassword">
+              <CvInput
                 v-model="passwordForm.confirmPassword"
                 type="password"
                 placeholder="••••••••"
                 icon="i-heroicons-check-circle"
               />
-            </UFormGroup>
+            </CvFormGroup>
 
             <div class="flex justify-end">
-              <UButton
+              <CvButton
                 type="submit"
                 color="orange"
                 :loading="changingPassword"
               >
                 Alterar Senha
-              </UButton>
+              </CvButton>
             </div>
-          </UForm>
-        </UCard>
+          </CvForm>
+        </CvCard>
       </div>
 
       <!-- Sidebar -->
       <div class="space-y-6">
         <!-- Profile Card -->
-        <UCard class="bg-gray-800 border-gray-700">
+        <CvCard class="bg-gray-800 border-gray-700">
           <div class="text-center">
-            <UAvatar
+            <CvAvatar
               :text="userInitials"
               size="3xl"
               class="bg-orange-500 text-2xl mx-auto mb-4"
             />
             <h3 class="text-xl font-bold text-white">{{ authStore.userName }}</h3>
             <p class="text-gray-400">{{ authStore.userEmail }}</p>
-            <UBadge
+            <CvBadge
               :color="authStore.isAdmin ? 'purple' : 'blue'"
               variant="soft"
               class="mt-2"
             >
               {{ authStore.isAdmin ? 'Administrador' : 'Usuário' }}
-            </UBadge>
+            </CvBadge>
           </div>
-        </UCard>
+        </CvCard>
 
         <!-- Stats Card -->
-        <UCard class="bg-gray-800 border-gray-700">
+        <CvCard class="bg-gray-800 border-gray-700">
           <template #header>
             <h3 class="text-lg font-bold text-white">Minhas Estatísticas</h3>
           </template>
@@ -163,16 +163,16 @@
           </div>
 
           <template #footer>
-            <UButton
+            <CvButton
               to="/parlays"
               color="orange"
               variant="soft"
               block
             >
               Ver Meus Parlays
-            </UButton>
+            </CvButton>
           </template>
-        </UCard>
+        </CvCard>
       </div>
     </div>
   </div>

@@ -1,33 +1,34 @@
+
 <template>
   <div class="space-y-8">
     <!-- Loading -->
     <div v-if="parlaysStore.loading" class="space-y-6">
-      <USkeleton class="h-32 bg-gray-800" />
-      <USkeleton class="h-64 bg-gray-800" />
+      <CvSkeleton class="h-32 bg-gray-800" />
+      <CvSkeleton class="h-64 bg-gray-800" />
     </div>
 
     <template v-else-if="parlay">
       <!-- Header -->
       <div class="flex items-center justify-between flex-wrap gap-4">
-        <UButton
+        <CvButton
           to="/parlays"
           color="gray"
           variant="ghost"
           icon="i-heroicons-arrow-left"
         >
           Voltar
-        </UButton>
-        <UBadge
+        </CvButton>
+        <CvBadge
           :color="getResultColor(parlay.result)"
           variant="soft"
           size="lg"
         >
           {{ getResultLabel(parlay.result) }}
-        </UBadge>
+        </CvBadge>
       </div>
 
       <!-- Parlay Overview -->
-      <UCard class="bg-gray-800 border-gray-700">
+      <CvCard class="bg-gray-800 border-gray-700">
         <div class="text-center mb-6">
           <h1 class="text-2xl font-bold text-white mb-2">
             Parlay #{{ parlay.id.slice(-8).toUpperCase() }}
@@ -46,14 +47,14 @@
             </div>
             <div class="text-center">
               <p class="text-gray-500">@</p>
-              <UBadge
+              <CvBadge
                 :color="getGameStatusColor(parlay.game.status)"
                 variant="soft"
                 size="sm"
                 class="mt-1"
               >
                 {{ getGameStatusLabel(parlay.game.status) }}
-              </UBadge>
+              </CvBadge>
             </div>
             <div class="text-center">
               <p class="text-2xl font-bold text-white">{{ parlay.game.homeTeam.code }}</p>
@@ -94,13 +95,13 @@
             </p>
           </div>
         </div>
-      </UCard>
+      </CvCard>
 
       <!-- AI Analysis -->
-      <UCard v-if="parlay.aiAnalysis" class="bg-gray-800 border-gray-700">
+      <CvCard v-if="parlay.aiAnalysis" class="bg-gray-800 border-gray-700">
         <template #header>
           <div class="flex items-center space-x-2">
-            <UIcon name="i-heroicons-sparkles" class="w-5 h-5 text-orange-500" />
+            <CvIcon name="i-heroicons-sparkles" class="w-5 h-5 text-orange-500" />
             <h2 class="text-lg font-bold text-white">Análise da IA</h2>
           </div>
         </template>
@@ -108,13 +109,13 @@
         <p v-if="parlay.reasoning" class="text-gray-400 mt-4 text-sm italic">
           {{ parlay.reasoning }}
         </p>
-      </UCard>
+      </CvCard>
 
       <!-- Parlay Items -->
       <div class="space-y-4">
         <h2 class="text-xl font-bold text-white">Apostas do Parlay</h2>
         
-        <UCard
+        <CvCard
           v-for="(item, index) in parlay.items"
           :key="item.id"
           class="bg-gray-800 border-gray-700"
@@ -125,7 +126,7 @@
                 class="w-10 h-10 rounded-full flex items-center justify-center"
                 :class="getItemResultBg(item.result)"
               >
-                <UIcon
+                <CvIcon
                   :name="getItemResultIcon(item.result)"
                   :class="getItemResultColor(item.result)"
                   class="w-6 h-6"
@@ -168,7 +169,7 @@
               </div>
               <div v-if="item.actualValue !== null">
                 <p class="text-gray-400 text-sm">Valor Real</p>
-                <p class="text-white font-medium">{{ item.actualValue.toFixed(1) }}</p>
+                <p class="text-white font-medium">{{ (item.actualValue ?? 0).toFixed(1) }}</p>
               </div>
               <div>
                 <p class="text-gray-400 text-sm">Resultado</p>
@@ -187,7 +188,7 @@
                   :key="fIndex"
                   class="flex items-start space-x-2 text-sm"
                 >
-                  <UIcon
+                  <CvIcon
                     :name="factor.impact === 'positive' ? 'i-heroicons-arrow-up' : factor.impact === 'negative' ? 'i-heroicons-arrow-down' : 'i-heroicons-minus'"
                     :class="factor.impact === 'positive' ? 'text-green-400' : factor.impact === 'negative' ? 'text-red-400' : 'text-gray-400'"
                     class="w-4 h-4 mt-0.5"
@@ -205,36 +206,99 @@
               <p class="text-gray-400 text-sm">Raciocínio:</p>
               <p class="text-gray-300 text-sm mt-1">{{ item.contextAnalysis.reasoning }}</p>
             </div>
+
+            <!-- Detailed Reasoning -->
+            <div v-if="item.contextAnalysis?.detailedReasoning" class="mt-4">
+              <div class="p-4 bg-gray-900/70 rounded-lg border border-gray-700">
+                <div class="flex items-center space-x-2 mb-3">
+                  <CvIcon name="i-heroicons-light-bulb" class="w-5 h-5 text-orange-500" />
+                  <p class="text-white font-medium text-sm">Linha de Raciocínio Detalhada</p>
+                </div>
+                
+                <!-- Summary -->
+                <p class="text-gray-300 text-sm mb-3">{{ item.contextAnalysis.detailedReasoning.summary }}</p>
+                
+                <!-- Key Stats -->
+                <div v-if="item.contextAnalysis.detailedReasoning.keyStats" class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+                  <div class="bg-gray-800/50 rounded px-3 py-2 text-center">
+                    <p class="text-gray-400 text-xs">Média Recente</p>
+                    <p class="text-white font-bold">{{ item.contextAnalysis.detailedReasoning.keyStats.recentAverage }}</p>
+                  </div>
+                  <div class="bg-gray-800/50 rounded px-3 py-2 text-center">
+                    <p class="text-gray-400 text-xs">vs Oponente</p>
+                    <p class="text-white font-bold">{{ item.contextAnalysis.detailedReasoning.keyStats.vsOpponentAverage }}</p>
+                  </div>
+                  <div class="bg-gray-800/50 rounded px-3 py-2 text-center">
+                    <p class="text-gray-400 text-xs">Tendência</p>
+                    <p class="text-white font-bold">{{ getTrendLabel(item.contextAnalysis.detailedReasoning.keyStats.trend) }}</p>
+                  </div>
+                  <div class="bg-gray-800/50 rounded px-3 py-2 text-center">
+                    <p class="text-gray-400 text-xs">Variação</p>
+                    <p class="text-white font-bold">{{ item.contextAnalysis.detailedReasoning.keyStats.trendChange }}</p>
+                  </div>
+                </div>
+
+                <!-- Considerations -->
+                <div v-if="item.contextAnalysis.detailedReasoning.considerations?.length" class="space-y-2">
+                  <p class="text-gray-400 text-xs uppercase tracking-wider font-medium">O que foi considerado:</p>
+                  <div
+                    v-for="(cons, cIndex) in item.contextAnalysis.detailedReasoning.considerations"
+                    :key="cIndex"
+                    class="flex items-start space-x-3 bg-gray-800/30 rounded-lg p-2"
+                  >
+                    <div class="mt-0.5">
+                      <CvIcon
+                        :name="cons.impact === 'positive' ? 'i-heroicons-arrow-trending-up' : cons.impact === 'negative' ? 'i-heroicons-arrow-trending-down' : 'i-heroicons-minus'"
+                        :class="cons.impact === 'positive' ? 'text-green-400' : cons.impact === 'negative' ? 'text-red-400' : 'text-gray-400'"
+                        class="w-5 h-5"
+                      />
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <div class="flex items-center justify-between">
+                        <p class="text-white text-sm font-medium">{{ cons.category }}</p>
+                        <span
+                          class="text-xs px-2 py-0.5 rounded-full"
+                          :class="cons.impact === 'positive' ? 'bg-green-500/20 text-green-400' : cons.impact === 'negative' ? 'bg-red-500/20 text-red-400' : 'bg-gray-500/20 text-gray-400'"
+                        >
+                          {{ cons.delta }}
+                        </span>
+                      </div>
+                      <p class="text-gray-400 text-xs mt-0.5">{{ cons.description }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-        </UCard>
+        </CvCard>
       </div>
 
       <!-- Actions -->
       <div class="flex justify-center gap-4">
-        <UButton
+        <CvButton
           to="/games"
           color="gray"
           variant="soft"
           icon="i-heroicons-arrow-left"
         >
           Ver Mais Jogos
-        </UButton>
-        <UButton
+        </CvButton>
+        <CvButton
           v-if="parlay.game.status === 'SCHEDULED'"
           color="orange"
           icon="i-heroicons-share"
           @click="shareParlay"
         >
           Compartilhar
-        </UButton>
+        </CvButton>
       </div>
     </template>
 
     <!-- Not Found -->
     <div v-else class="text-center py-16">
-      <UIcon name="i-heroicons-exclamation-triangle" class="w-16 h-16 text-gray-600 mx-auto mb-4" />
+      <CvIcon name="i-heroicons-exclamation-triangle" class="w-16 h-16 text-gray-600 mx-auto mb-4" />
       <h2 class="text-2xl font-bold text-white mb-2">Parlay não encontrado</h2>
-      <UButton to="/parlays" color="orange">Voltar para parlays</UButton>
+      <CvButton to="/parlays" color="orange">Voltar para parlays</CvButton>
     </div>
   </div>
 </template>
@@ -260,7 +324,7 @@ onMounted(async () => {
 })
 
 // Methods
-function getResultColor(result: string): string {
+function getResultColor(result: string): any {
   const colors: Record<string, string> = {
     PENDING: 'blue',
     WIN: 'green',
@@ -270,7 +334,7 @@ function getResultColor(result: string): string {
   return colors[result] || 'gray'
 }
 
-function getResultLabel(result: string): string {
+function getResultLabel(result: string): any {
   const labels: Record<string, string> = {
     PENDING: 'Pendente',
     WIN: 'Ganho',
@@ -280,7 +344,19 @@ function getResultLabel(result: string): string {
   return labels[result] || result
 }
 
-function getGameStatusColor(status: string): string {
+function getTrendLabel(trend: string): string {
+  const labels: Record<string, string> = {
+    strong_up: 'Forte Alta',
+    up: 'Alta',
+    stable: 'Estável',
+    down: 'Baixa',
+    strong_down: 'Forte Baixa',
+    insufficient_data: 'Dados Insuficientes',
+  }
+  return labels[trend?.toLowerCase()] || trend
+}
+
+function getGameStatusColor(status: string): any {
   const colors: Record<string, string> = {
     SCHEDULED: 'blue',
     LIVE: 'green',
@@ -312,7 +388,7 @@ function getItemResultIcon(result: string): string {
   return icons[result] || 'i-heroicons-question-mark-circle'
 }
 
-function getItemResultColor(result: string): string {
+function getItemResultColor(result: string): any {
   const colors: Record<string, string> = {
     PENDING: 'text-gray-400',
     WIN: 'text-green-400',
@@ -349,7 +425,7 @@ function getBetTypeLabel(type: string): string {
   return labels[type] || type
 }
 
-function getConfidenceColor(confidence: number): string {
+function getConfidenceColor(confidence: number): any {
   if (confidence >= 70) return 'text-green-400'
   if (confidence >= 50) return 'text-yellow-400'
   return 'text-red-400'

@@ -1,3 +1,4 @@
+
 <template>
   <div class="space-y-8">
     <!-- Header -->
@@ -13,15 +14,15 @@
       
       <!-- Date Filter -->
       <div class="flex items-center space-x-2">
-        <UButton
+        <CvButton
           color="gray"
           variant="soft"
           icon="i-heroicons-calendar"
           @click="showDatePicker = true"
         >
           {{ selectedDateLabel }}
-        </UButton>
-        <UButton
+        </CvButton>
+        <CvButton
           v-if="selectedDate !== today"
           color="gray"
           variant="ghost"
@@ -29,25 +30,25 @@
           @click="resetDate"
         >
           Hoje
-        </UButton>
+        </CvButton>
       </div>
     </div>
 
     <!-- Filters -->
     <div class="flex flex-wrap gap-4">
-      <USelect
+      <CvSelect
         v-model="filters.status"
         :options="statusOptions"
         placeholder="Status"
         class="w-40"
       />
-      <USelect
+      <CvSelect
         v-model="filters.teamId"
         :options="teamOptions"
         placeholder="Time"
         class="w-48"
       />
-      <UInput
+      <CvInput
         v-model="searchQuery"
         placeholder="Buscar jogo..."
         icon="i-heroicons-magnifying-glass"
@@ -57,11 +58,11 @@
 
     <!-- Games Grid -->
     <div v-if="gamesStore.loading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <USkeleton v-for="i in 6" :key="i" class="h-64 bg-gray-800" />
+      <CvSkeleton v-for="i in 6" :key="i" class="h-64 bg-gray-800" />
     </div>
 
     <div v-else-if="filteredGames.length === 0" class="text-center py-16">
-      <UIcon name="i-heroicons-calendar" class="w-16 h-16 text-gray-600 mx-auto mb-4" />
+      <CvIcon name="i-heroicons-calendar" class="w-16 h-16 text-gray-600 mx-auto mb-4" />
       <h3 class="text-xl font-medium text-white mb-2">
         Nenhum jogo encontrado
       </h3>
@@ -71,20 +72,20 @@
     </div>
 
     <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <UCard
+      <CvCard
         v-for="game in filteredGames"
         :key="game.id"
         class="bg-gray-800 border-gray-700 hover:border-orange-500/50 transition-all duration-300 group"
       >
         <!-- Header -->
         <div class="flex items-center justify-between mb-4">
-          <UBadge
+          <CvBadge
             :color="getStatusColor(game.status)"
             variant="soft"
             size="sm"
           >
             {{ getStatusLabel(game.status) }}
-          </UBadge>
+          </CvBadge>
           <span class="text-sm text-gray-400">
             {{ formatGameDate(game.gameDate) }}
           </span>
@@ -128,7 +129,7 @@
 
         <!-- Actions -->
         <div class="flex gap-2">
-          <UButton
+          <CvButton
             :to="`/games/${game.id}`"
             color="gray"
             variant="soft"
@@ -136,24 +137,24 @@
             size="sm"
           >
             Detalhes
-          </UButton>
-          <UButton
+          </CvButton>
+          <CvButton
             color="orange"
             block
             size="sm"
             :loading="parlaysStore.generating && selectedGameId === game.id"
-            :disabled="game.status !== 'SCHEDULED' || parlaysStore.generating"
+            :disabled="(game.status !== 'SCHEDULED' && game.status !== 'LIVE') || parlaysStore.generating"
             @click="generateParlay(game.id)"
           >
             Gerar Parlay
-          </UButton>
+          </CvButton>
         </div>
-      </UCard>
+      </CvCard>
     </div>
 
     <!-- Pagination -->
     <div v-if="gamesStore.meta && gamesStore.meta.totalPages > 1" class="flex justify-center">
-      <UPagination
+      <CvPagination
         v-model="page"
         :total="gamesStore.meta.total"
         :page-count="gamesStore.meta.limit"
@@ -161,12 +162,12 @@
     </div>
 
     <!-- Date Picker Modal -->
-    <UModal v-model="showDatePicker">
-      <UCard class="bg-gray-800 border-gray-700">
+    <CvModal v-model="showDatePicker">
+      <CvCard class="bg-gray-800 border-gray-700">
         <template #header>
           <div class="flex items-center justify-between">
             <h3 class="text-lg font-medium text-white">Selecionar Data</h3>
-            <UButton
+            <CvButton
               color="gray"
               variant="ghost"
               icon="i-heroicons-x-mark"
@@ -185,23 +186,23 @@
         
         <template #footer>
           <div class="flex justify-end gap-2">
-            <UButton
+            <CvButton
               color="gray"
               variant="soft"
               @click="showDatePicker = false"
             >
               Cancelar
-            </UButton>
-            <UButton
+            </CvButton>
+            <CvButton
               color="orange"
               @click="applyDateFilter"
             >
               Aplicar
-            </UButton>
+            </CvButton>
           </div>
         </template>
-      </UCard>
-    </UModal>
+      </CvCard>
+    </CvModal>
   </div>
 </template>
 
@@ -287,7 +288,7 @@ watch(page, (newPage) => {
 })
 
 // Methods
-function getStatusColor(status: string): string {
+function getStatusColor(status: string): any {
   const colors: Record<string, string> = {
     SCHEDULED: 'blue',
     LIVE: 'green',
@@ -298,7 +299,7 @@ function getStatusColor(status: string): string {
   return colors[status] || 'gray'
 }
 
-function getStatusLabel(status: string): string {
+function getStatusLabel(status: string): any {
   const labels: Record<string, string> = {
     SCHEDULED: 'Agendado',
     LIVE: 'Ao Vivo',
@@ -309,7 +310,7 @@ function getStatusLabel(status: string): string {
   return labels[status] || status
 }
 
-function getSeasonTypeLabel(type: string): string {
+function getSeasonTypeLabel(type: string): any {
   const labels: Record<string, string> = {
     REGULAR_SEASON: 'Temporada Regular',
     PLAYOFFS: 'Playoffs',
@@ -318,7 +319,7 @@ function getSeasonTypeLabel(type: string): string {
   return labels[type] || type
 }
 
-function formatGameDate(dateString: string): string {
+function formatGameDate(dateString: string): any {
   try {
     const date = parseISO(dateString)
     if (isToday(date)) {
@@ -335,7 +336,7 @@ async function generateParlay(gameId: number) {
   const parlay = await parlaysStore.generateParlay(gameId)
   
   if (parlay) {
-    navigateTo(`/parlays/${parlay.id}`)
+    navigateTo(`/parlays/${(parlay as any).id}`)
   }
 }
 

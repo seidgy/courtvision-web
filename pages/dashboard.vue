@@ -1,3 +1,4 @@
+
 <template>
   <div class="space-y-8">
     <!-- Header -->
@@ -10,19 +11,19 @@
           Bem-vindo de volta, {{ authStore.userName }}!
         </p>
       </div>
-      <UButton
+      <CvButton
         to="/games"
         color="orange"
         icon="i-heroicons-plus"
       >
         Novo Parlay
-      </UButton>
+      </CvButton>
     </div>
 
     <!-- Stats Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       <!-- Total Parlays -->
-      <UCard class="bg-gray-800 border-gray-700">
+      <CvCard class="bg-gray-800 border-gray-700">
         <div class="flex items-center justify-between">
           <div>
             <p class="text-gray-400 text-sm">Total de Parlays</p>
@@ -31,13 +32,13 @@
             </p>
           </div>
           <div class="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center">
-            <UIcon name="i-heroicons-ticket" class="w-6 h-6 text-blue-500" />
+            <CvIcon name="i-heroicons-ticket" class="w-6 h-6 text-blue-500" />
           </div>
         </div>
-      </UCard>
+      </CvCard>
 
       <!-- Win Rate -->
-      <UCard class="bg-gray-800 border-gray-700">
+      <CvCard class="bg-gray-800 border-gray-700">
         <div class="flex items-center justify-between">
           <div>
             <p class="text-gray-400 text-sm">Taxa de Acerto</p>
@@ -46,13 +47,13 @@
             </p>
           </div>
           <div class="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center">
-            <UIcon name="i-heroicons-chart-bar" class="w-6 h-6 text-green-500" />
+            <CvIcon name="i-heroicons-chart-bar" class="w-6 h-6 text-green-500" />
           </div>
         </div>
-      </UCard>
+      </CvCard>
 
       <!-- Profit -->
-      <UCard class="bg-gray-800 border-gray-700">
+      <CvCard class="bg-gray-800 border-gray-700">
         <div class="flex items-center justify-between">
           <div>
             <p class="text-gray-400 text-sm">Lucro/Prejuízo</p>
@@ -67,17 +68,17 @@
             class="w-12 h-12 rounded-xl flex items-center justify-center"
             :class="(parlaysStore.stats?.profit || 0) >= 0 ? 'bg-green-500/20' : 'bg-red-500/20'"
           >
-            <UIcon 
+            <CvIcon 
               :name="(parlaysStore.stats?.profit || 0) >= 0 ? 'i-heroicons-arrow-trending-up' : 'i-heroicons-arrow-trending-down'"
               class="w-6 h-6"
               :class="(parlaysStore.stats?.profit || 0) >= 0 ? 'text-green-500' : 'text-red-500'"
             />
           </div>
         </div>
-      </UCard>
+      </CvCard>
 
       <!-- ROI -->
-      <UCard class="bg-gray-800 border-gray-700">
+      <CvCard class="bg-gray-800 border-gray-700">
         <div class="flex items-center justify-between">
           <div>
             <p class="text-gray-400 text-sm">ROI</p>
@@ -92,14 +93,14 @@
             class="w-12 h-12 rounded-xl flex items-center justify-center"
             :class="(parlaysStore.stats?.roi || 0) >= 0 ? 'bg-green-500/20' : 'bg-red-500/20'"
           >
-            <UIcon 
-              name="i-heroicons-percentage-badge"
+            <CvIcon 
+              name="i-heroicons-percent-badge"
               class="w-6 h-6"
               :class="(parlaysStore.stats?.roi || 0) >= 0 ? 'text-green-500' : 'text-red-500'"
             />
           </div>
         </div>
-      </UCard>
+      </CvCard>
     </div>
 
     <!-- Content Grid -->
@@ -108,27 +109,27 @@
       <div class="lg:col-span-2 space-y-4">
         <div class="flex items-center justify-between">
           <h2 class="text-xl font-bold text-white">Jogos de Hoje</h2>
-          <UButton
+          <CvButton
             to="/games"
             variant="ghost"
             color="gray"
             size="sm"
           >
             Ver todos
-          </UButton>
+          </CvButton>
         </div>
 
         <div v-if="gamesStore.loading" class="space-y-4">
-          <USkeleton v-for="i in 3" :key="i" class="h-24 bg-gray-800" />
+          <CvSkeleton v-for="i in 3" :key="i" class="h-24 bg-gray-800" />
         </div>
 
         <div v-else-if="gamesStore.todayGames.length === 0" class="text-center py-12">
-          <UIcon name="i-heroicons-calendar" class="w-12 h-12 text-gray-600 mx-auto mb-4" />
+          <CvIcon name="i-heroicons-calendar" class="w-12 h-12 text-gray-600 mx-auto mb-4" />
           <p class="text-gray-400">Nenhum jogo programado para hoje</p>
         </div>
 
         <div v-else class="space-y-4">
-          <UCard
+          <CvCard
             v-for="game in gamesStore.todayGames.slice(0, 5)"
             :key="game.id"
             class="bg-gray-800 border-gray-700 hover:border-gray-600 transition-colors cursor-pointer"
@@ -147,19 +148,19 @@
                 </div>
               </div>
               <div class="text-right">
-                <UBadge
+                <CvBadge
                   :color="getStatusColor(game.status)"
                   variant="soft"
                   size="sm"
                 >
                   {{ getStatusLabel(game.status) }}
-                </UBadge>
+                </CvBadge>
                 <p class="text-sm text-gray-400 mt-1">
                   {{ formatGameTime(game.gameDate) }}
                 </p>
               </div>
             </div>
-          </UCard>
+          </CvCard>
         </div>
       </div>
 
@@ -167,35 +168,35 @@
       <div class="space-y-4">
         <div class="flex items-center justify-between">
           <h2 class="text-xl font-bold text-white">Parlays Recentes</h2>
-          <UButton
+          <CvButton
             to="/parlays"
             variant="ghost"
             color="gray"
             size="sm"
           >
             Ver todos
-          </UButton>
+          </CvButton>
         </div>
 
         <div v-if="parlaysStore.loading" class="space-y-4">
-          <USkeleton v-for="i in 3" :key="i" class="h-32 bg-gray-800" />
+          <CvSkeleton v-for="i in 3" :key="i" class="h-32 bg-gray-800" />
         </div>
 
         <div v-else-if="parlaysStore.parlays.length === 0" class="text-center py-12">
-          <UIcon name="i-heroicons-ticket" class="w-12 h-12 text-gray-600 mx-auto mb-4" />
+          <CvIcon name="i-heroicons-ticket" class="w-12 h-12 text-gray-600 mx-auto mb-4" />
           <p class="text-gray-400">Nenhum parlay gerado ainda</p>
-          <UButton
+          <CvButton
             to="/games"
             color="orange"
             size="sm"
             class="mt-4"
           >
             Gerar Parlay
-          </UButton>
+          </CvButton>
         </div>
 
         <div v-else class="space-y-4">
-          <UCard
+          <CvCard
             v-for="parlay in parlaysStore.parlays.slice(0, 5)"
             :key="parlay.id"
             class="bg-gray-800 border-gray-700"
@@ -205,13 +206,13 @@
                 <span class="text-sm text-gray-400">
                   {{ parlay.game.awayTeam.code }} @ {{ parlay.game.homeTeam.code }}
                 </span>
-                <UBadge
+                <CvBadge
                   :color="getResultColor(parlay.result)"
                   variant="soft"
                   size="sm"
                 >
                   {{ getResultLabel(parlay.result) }}
-                </UBadge>
+                </CvBadge>
               </div>
               
               <div class="space-y-1">
@@ -239,7 +240,7 @@
                 </span>
               </div>
             </div>
-          </UCard>
+          </CvCard>
         </div>
       </div>
     </div>
@@ -271,7 +272,7 @@ onMounted(async () => {
 })
 
 // Helpers
-function getStatusColor(status: string): string {
+function getStatusColor(status: string): any {
   const colors: Record<string, string> = {
     SCHEDULED: 'blue',
     LIVE: 'green',
@@ -282,7 +283,7 @@ function getStatusColor(status: string): string {
   return colors[status] || 'gray'
 }
 
-function getStatusLabel(status: string): string {
+function getStatusLabel(status: string): any {
   const labels: Record<string, string> = {
     SCHEDULED: 'Agendado',
     LIVE: 'Ao Vivo',
@@ -293,7 +294,7 @@ function getStatusLabel(status: string): string {
   return labels[status] || status
 }
 
-function getResultColor(result: string): string {
+function getResultColor(result: string): any {
   const colors: Record<string, string> = {
     PENDING: 'blue',
     WIN: 'green',
@@ -303,7 +304,7 @@ function getResultColor(result: string): string {
   return colors[result] || 'gray'
 }
 
-function getResultLabel(result: string): string {
+function getResultLabel(result: string): any {
   const labels: Record<string, string> = {
     PENDING: 'Pendente',
     WIN: 'Ganho',
@@ -313,13 +314,13 @@ function getResultLabel(result: string): string {
   return labels[result] || result
 }
 
-function getConfidenceColor(confidence: number): string {
+function getConfidenceColor(confidence: number): any {
   if (confidence >= 70) return 'text-green-400'
   if (confidence >= 50) return 'text-yellow-400'
   return 'text-red-400'
 }
 
-function formatGameTime(dateString: string): string {
+function formatGameTime(dateString: string): any {
   try {
     return format(parseISO(dateString), 'HH:mm', { locale: ptBR })
   } catch {

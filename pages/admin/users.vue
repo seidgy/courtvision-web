@@ -10,42 +10,42 @@
           Crie, edite e gerencie usuários do sistema
         </p>
       </div>
-      <UButton
+      <CvButton
         color="orange"
         icon="i-heroicons-plus"
         @click="showCreateModal = true"
       >
         Novo Usuário
-      </UButton>
+      </CvButton>
     </div>
 
     <!-- Filters -->
     <div class="flex flex-wrap gap-4">
-      <UInput
+      <CvInput
         v-model="searchQuery"
         placeholder="Buscar usuário..."
         icon="i-heroicons-magnifying-glass"
         class="w-64"
         @keyup.enter="applySearch"
       />
-      <UButton
+      <CvButton
         color="gray"
         variant="soft"
         icon="i-heroicons-magnifying-glass"
         @click="applySearch"
       >
         Buscar
-      </UButton>
+      </CvButton>
     </div>
 
     <!-- Users Table -->
-    <UCard class="bg-gray-800 border-gray-700">
+    <CvCard class="bg-gray-800 border-gray-700">
       <div v-if="usersStore.loading" class="space-y-4">
-        <USkeleton v-for="i in 5" :key="i" class="h-12 bg-gray-700" />
+        <CvSkeleton v-for="i in 5" :key="i" class="h-12 bg-gray-700" />
       </div>
 
       <div v-else-if="usersStore.users.length === 0" class="text-center py-12">
-        <UIcon name="i-heroicons-users" class="w-16 h-16 text-gray-600 mx-auto mb-4" />
+        <CvIcon name="i-heroicons-users" class="w-16 h-16 text-gray-600 mx-auto mb-4" />
         <h3 class="text-xl font-medium text-white mb-2">
           Nenhum usuário encontrado
         </h3>
@@ -75,37 +75,37 @@
               <td class="px-4 py-3 text-white">{{ user.name }}</td>
               <td class="px-4 py-3 text-gray-300">{{ user.email }}</td>
               <td class="px-4 py-3">
-                <UBadge
+                <CvBadge
                   :color="user.role === 'ADMIN' ? 'purple' : 'blue'"
                   variant="soft"
                   size="sm"
                 >
                   {{ user.role === 'ADMIN' ? 'Admin' : 'Usuário' }}
-                </UBadge>
+                </CvBadge>
               </td>
               <td class="px-4 py-3">
-                <UBadge
+                <CvBadge
                   :color="user.isActive ? 'green' : 'red'"
                   variant="soft"
                   size="sm"
                 >
                   {{ user.isActive ? 'Ativo' : 'Inativo' }}
-                </UBadge>
+                </CvBadge>
               </td>
               <td class="px-4 py-3 text-gray-400">
                 {{ formatDate(user.createdAt) }}
               </td>
               <td class="px-4 py-3 text-right">
-                <UDropdown
+                <CvDropdown
                   :items="getUserActions(user)"
-                  :popper="{ placement: 'bottom-end' }"
+                  placement="bottom-end"
                 >
-                  <UButton
+                  <CvButton
                     color="gray"
                     variant="ghost"
                     icon="i-heroicons-ellipsis-vertical"
                   />
-                </UDropdown>
+                </CvDropdown>
               </td>
             </tr>
           </tbody>
@@ -114,142 +114,142 @@
 
       <!-- Pagination -->
       <div v-if="usersStore.meta && usersStore.meta.totalPages > 1" class="flex justify-center mt-6">
-        <UPagination
+        <CvPagination
           v-model="page"
           :total="usersStore.meta.total"
           :page-count="usersStore.meta.limit"
         />
       </div>
-    </UCard>
+    </CvCard>
 
     <!-- Create User Modal -->
-    <UModal v-model="showCreateModal">
-      <UCard class="bg-gray-800 border-gray-700">
+    <CvModal v-model="showCreateModal">
+      <CvCard class="bg-gray-800 border-gray-700">
         <template #header>
           <h3 class="text-lg font-bold text-white">Criar Novo Usuário</h3>
         </template>
 
-        <UForm
+        <CvForm
           :schema="createSchema"
           :state="createForm"
           class="space-y-4"
           @submit="createUser"
         >
-          <UFormGroup label="Nome" name="name">
-            <UInput
+          <CvFormGroup label="Nome" name="name">
+            <CvInput
               v-model="createForm.name"
               placeholder="Nome completo"
             />
-          </UFormGroup>
+          </CvFormGroup>
 
-          <UFormGroup label="Email" name="email">
-            <UInput
+          <CvFormGroup label="Email" name="email">
+            <CvInput
               v-model="createForm.email"
               type="email"
               placeholder="email@exemplo.com"
             />
-          </UFormGroup>
+          </CvFormGroup>
 
-          <UFormGroup label="Senha" name="password">
-            <UInput
+          <CvFormGroup label="Senha" name="password">
+            <CvInput
               v-model="createForm.password"
               type="password"
               placeholder="Mínimo 6 caracteres"
             />
-          </UFormGroup>
+          </CvFormGroup>
 
-          <UFormGroup label="Função" name="role">
-            <USelect
+          <CvFormGroup label="Função" name="role">
+            <CvSelect
               v-model="createForm.role"
               :options="roleOptions"
             />
-          </UFormGroup>
+          </CvFormGroup>
 
           <div class="flex justify-end gap-2 pt-4">
-            <UButton
+            <CvButton
               color="gray"
               variant="soft"
               @click="showCreateModal = false"
             >
               Cancelar
-            </UButton>
-            <UButton
+            </CvButton>
+            <CvButton
               type="submit"
               color="orange"
               :loading="creating"
             >
               Criar
-            </UButton>
+            </CvButton>
           </div>
-        </UForm>
-      </UCard>
-    </UModal>
+        </CvForm>
+      </CvCard>
+    </CvModal>
 
     <!-- Edit User Modal -->
-    <UModal v-model="showEditModal">
-      <UCard class="bg-gray-800 border-gray-700">
+    <CvModal v-model="showEditModal">
+      <CvCard class="bg-gray-800 border-gray-700">
         <template #header>
           <h3 class="text-lg font-bold text-white">Editar Usuário</h3>
         </template>
 
-        <UForm
+        <CvForm
           :schema="editSchema"
           :state="editForm"
           class="space-y-4"
           @submit="updateUser"
         >
-          <UFormGroup label="Nome" name="name">
-            <UInput
+          <CvFormGroup label="Nome" name="name">
+            <CvInput
               v-model="editForm.name"
               placeholder="Nome completo"
             />
-          </UFormGroup>
+          </CvFormGroup>
 
-          <UFormGroup label="Email" name="email">
-            <UInput
+          <CvFormGroup label="Email" name="email">
+            <CvInput
               v-model="editForm.email"
               type="email"
               placeholder="email@exemplo.com"
             />
-          </UFormGroup>
+          </CvFormGroup>
 
-          <UFormGroup label="Função" name="role">
-            <USelect
+          <CvFormGroup label="Função" name="role">
+            <CvSelect
               v-model="editForm.role"
               :options="roleOptions"
             />
-          </UFormGroup>
+          </CvFormGroup>
 
-          <UFormGroup label="Status" name="isActive">
-            <UToggle v-model="editForm.isActive" />
+          <CvFormGroup label="Status" name="isActive">
+            <CvToggle v-model="editForm.isActive" />
             <span class="ml-2 text-gray-400">
               {{ editForm.isActive ? 'Ativo' : 'Inativo' }}
             </span>
-          </UFormGroup>
+          </CvFormGroup>
 
           <div class="flex justify-end gap-2 pt-4">
-            <UButton
+            <CvButton
               color="gray"
               variant="soft"
               @click="showEditModal = false"
             >
               Cancelar
-            </UButton>
-            <UButton
+            </CvButton>
+            <CvButton
               type="submit"
               color="orange"
               :loading="updating"
             >
               Salvar
-            </UButton>
+            </CvButton>
           </div>
-        </UForm>
-      </UCard>
-    </UModal>
+        </CvForm>
+      </CvCard>
+    </CvModal>
 
     <!-- Reset Password Modal -->
-    <UModal v-model="showResetPasswordModal">
-      <UCard class="bg-gray-800 border-gray-700">
+    <CvModal v-model="showResetPasswordModal">
+      <CvCard class="bg-gray-800 border-gray-700">
         <template #header>
           <h3 class="text-lg font-bold text-white">Resetar Senha</h3>
         </template>
@@ -258,46 +258,46 @@
           Digite a nova senha para <strong>{{ selectedUser?.name }}</strong>
         </p>
 
-        <UForm
+        <CvForm
           :schema="resetPasswordSchema"
           :state="resetPasswordForm"
           class="space-y-4"
           @submit="resetPassword"
         >
-          <UFormGroup label="Nova Senha" name="newPassword">
-            <UInput
+          <CvFormGroup label="Nova Senha" name="newPassword">
+            <CvInput
               v-model="resetPasswordForm.newPassword"
               type="password"
               placeholder="Mínimo 6 caracteres"
             />
-          </UFormGroup>
+          </CvFormGroup>
 
           <div class="flex justify-end gap-2 pt-4">
-            <UButton
+            <CvButton
               color="gray"
               variant="soft"
               @click="showResetPasswordModal = false"
             >
               Cancelar
-            </UButton>
-            <UButton
+            </CvButton>
+            <CvButton
               type="submit"
               color="orange"
               :loading="resetting"
             >
               Resetar
-            </UButton>
+            </CvButton>
           </div>
-        </UForm>
-      </UCard>
-    </UModal>
+        </CvForm>
+      </CvCard>
+    </CvModal>
 
     <!-- Delete Confirmation Modal -->
-    <UModal v-model="showDeleteModal">
-      <UCard class="bg-gray-800 border-gray-700">
+    <CvModal v-model="showDeleteModal">
+      <CvCard class="bg-gray-800 border-gray-700">
         <template #header>
           <div class="flex items-center space-x-2">
-            <UIcon name="i-heroicons-exclamation-triangle" class="w-6 h-6 text-red-500" />
+            <CvIcon name="i-heroicons-exclamation-triangle" class="w-6 h-6 text-red-500" />
             <h3 class="text-lg font-medium text-white">Confirmar Exclusão</h3>
           </div>
         </template>
@@ -309,24 +309,24 @@
         
         <template #footer>
           <div class="flex justify-end gap-2">
-            <UButton
+            <CvButton
               color="gray"
               variant="soft"
               @click="showDeleteModal = false"
             >
               Cancelar
-            </UButton>
-            <UButton
+            </CvButton>
+            <CvButton
               color="red"
               :loading="deleting"
               @click="deleteUser"
             >
               Excluir
-            </UButton>
+            </CvButton>
           </div>
         </template>
-      </UCard>
-    </UModal>
+      </CvCard>
+    </CvModal>
   </div>
 </template>
 

@@ -7,57 +7,54 @@
       Entre com suas credenciais para continuar
     </p>
 
-    <UForm
+    <CvForm
       :schema="schema"
       :state="formState"
       class="space-y-6"
       @submit="handleLogin"
     >
       <!-- Email -->
-      <UFormGroup
+      <CvFormGroup
         label="Email"
         name="email"
         :error="errors.email"
       >
-        <UInput
+        <CvInput
           v-model="formState.email"
           type="email"
           placeholder="seu@email.com"
           icon="i-heroicons-envelope"
           size="lg"
-          :ui="{ base: 'bg-gray-700 border-gray-600 text-white' }"
         />
-      </UFormGroup>
+      </CvFormGroup>
 
       <!-- Password -->
-      <UFormGroup
+      <CvFormGroup
         label="Senha"
         name="password"
         :error="errors.password"
       >
-        <UInput
+        <CvInput
           v-model="formState.password"
           :type="showPassword ? 'text' : 'password'"
           placeholder="••••••••"
           icon="i-heroicons-lock-closed"
           size="lg"
-          :ui="{ base: 'bg-gray-700 border-gray-600 text-white' }"
-          :ui-icon="{ trailing: { pointer: '' } }"
         >
           <template #trailing>
-            <UButton
-              color="gray"
-              variant="link"
-              :icon="showPassword ? 'i-heroicons-eye-slash' : 'i-heroicons-eye'"
-              :padded="false"
+            <button
+              type="button"
+              class="text-gray-400 hover:text-white transition-colors"
               @click="showPassword = !showPassword"
-            />
+            >
+              <CvIcon :name="showPassword ? 'i-heroicons-eye-slash' : 'i-heroicons-eye'" class="w-5 h-5" />
+            </button>
           </template>
-        </UInput>
-      </UFormGroup>
+        </CvInput>
+      </CvFormGroup>
 
       <!-- Error Message -->
-      <UAlert
+      <CvAlert
         v-if="authStore.error"
         color="red"
         variant="soft"
@@ -67,7 +64,7 @@
       />
 
       <!-- Submit Button -->
-      <UButton
+      <CvButton
         type="submit"
         color="orange"
         size="lg"
@@ -76,11 +73,11 @@
         :disabled="authStore.loading"
       >
         <template #leading>
-          <UIcon name="i-heroicons-arrow-right" />
+          <CvIcon name="i-heroicons-arrow-right" />
         </template>
         Entrar
-      </UButton>
-    </UForm>
+      </CvButton>
+    </CvForm>
 
     <!-- Info -->
     <div class="mt-6 text-center">

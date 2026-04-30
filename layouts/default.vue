@@ -8,7 +8,7 @@
           <div class="flex items-center">
             <NuxtLink to="/dashboard" class="flex items-center space-x-2">
               <div class="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
-                <UIcon name="i-heroicons-basketball" class="w-6 h-6 text-white" />
+                <CvIcon name="i-heroicons-basketball" class="w-6 h-6 text-white" />
               </div>
               <span class="text-xl font-bold text-white hidden sm:block">
                 Court<span class="text-orange-500">Vision</span>
@@ -25,7 +25,7 @@
               class="flex items-center space-x-2 px-3 py-2 rounded-lg text-gray-300 hover:text-white hover:bg-gray-700 transition-colors"
               :class="{ 'bg-gray-700 text-white': $route.path === item.path }"
             >
-              <UIcon :name="item.icon" class="w-5 h-5" />
+              <CvIcon :name="item.icon" class="w-5 h-5" />
               <span>{{ item.label }}</span>
             </NuxtLink>
           </div>
@@ -33,37 +33,37 @@
           <!-- User Menu -->
           <div class="flex items-center space-x-4">
             <!-- Notificações -->
-            <UButton
+            <CvButton
               color="gray"
               variant="ghost"
               icon="i-heroicons-bell"
               class="relative"
             >
               <span class="absolute top-0 right-0 w-2 h-2 bg-orange-500 rounded-full"></span>
-            </UButton>
+            </CvButton>
 
             <!-- User Dropdown -->
-            <UDropdown
+            <CvDropdown
               :items="userMenuItems"
-              :popper="{ placement: 'bottom-end' }"
+              placement="bottom-end"
             >
-              <UButton
+              <CvButton
                 color="gray"
                 variant="ghost"
                 class="flex items-center space-x-2"
               >
-                <UAvatar
+                <CvAvatar
                   :text="userInitials"
                   size="sm"
                   class="bg-orange-500"
                 />
                 <span class="hidden sm:block">{{ authStore.userName }}</span>
-                <UIcon name="i-heroicons-chevron-down" class="w-4 h-4" />
-              </UButton>
-            </UDropdown>
+                <CvIcon name="i-heroicons-chevron-down" class="w-4 h-4" />
+              </CvButton>
+            </CvDropdown>
 
             <!-- Mobile Menu Button -->
-            <UButton
+            <CvButton
               color="gray"
               variant="ghost"
               icon="i-heroicons-bars-3"
@@ -88,7 +88,7 @@
             :class="{ 'bg-gray-700 text-white': $route.path === item.path }"
             @click="isMobileMenuOpen = false"
           >
-            <UIcon :name="item.icon" class="w-5 h-5" />
+            <CvIcon :name="item.icon" class="w-5 h-5" />
             <span>{{ item.label }}</span>
           </NuxtLink>
         </div>

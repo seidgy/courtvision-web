@@ -12,63 +12,63 @@
 
     <!-- Stats Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      <UCard class="bg-gray-800 border-gray-700">
+      <CvCard class="bg-gray-800 border-gray-700">
         <div class="flex items-center justify-between">
           <div>
             <p class="text-gray-400 text-sm">Total de Usuários</p>
             <p class="text-3xl font-bold text-white mt-1">{{ stats.totalUsers }}</p>
           </div>
           <div class="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center">
-            <UIcon name="i-heroicons-users" class="w-6 h-6 text-blue-500" />
+            <CvIcon name="i-heroicons-users" class="w-6 h-6 text-blue-500" />
           </div>
         </div>
-      </UCard>
+      </CvCard>
 
-      <UCard class="bg-gray-800 border-gray-700">
+      <CvCard class="bg-gray-800 border-gray-700">
         <div class="flex items-center justify-between">
           <div>
             <p class="text-gray-400 text-sm">Usuários Ativos</p>
             <p class="text-3xl font-bold text-green-400 mt-1">{{ stats.activeUsers }}</p>
           </div>
           <div class="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center">
-            <UIcon name="i-heroicons-user-check" class="w-6 h-6 text-green-500" />
+            <CvIcon name="i-heroicons-user-check" class="w-6 h-6 text-green-500" />
           </div>
         </div>
-      </UCard>
+      </CvCard>
 
-      <UCard class="bg-gray-800 border-gray-700">
+      <CvCard class="bg-gray-800 border-gray-700">
         <div class="flex items-center justify-between">
           <div>
             <p class="text-gray-400 text-sm">Total de Parlays</p>
             <p class="text-3xl font-bold text-white mt-1">{{ stats.totalParlays }}</p>
           </div>
           <div class="w-12 h-12 bg-orange-500/20 rounded-xl flex items-center justify-center">
-            <UIcon name="i-heroicons-ticket" class="w-6 h-6 text-orange-500" />
+            <CvIcon name="i-heroicons-ticket" class="w-6 h-6 text-orange-500" />
           </div>
         </div>
-      </UCard>
+      </CvCard>
 
-      <UCard class="bg-gray-800 border-gray-700">
+      <CvCard class="bg-gray-800 border-gray-700">
         <div class="flex items-center justify-between">
           <div>
             <p class="text-gray-400 text-sm">Taxa de Acerto Geral</p>
             <p class="text-3xl font-bold text-white mt-1">{{ stats.globalWinRate.toFixed(1) }}%</p>
           </div>
           <div class="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center">
-            <UIcon name="i-heroicons-chart-pie" class="w-6 h-6 text-purple-500" />
+            <CvIcon name="i-heroicons-chart-pie" class="w-6 h-6 text-purple-500" />
           </div>
         </div>
-      </UCard>
+      </CvCard>
     </div>
 
     <!-- Quick Actions -->
-    <UCard class="bg-gray-800 border-gray-700">
+    <CvCard class="bg-gray-800 border-gray-700">
       <template #header>
         <h2 class="text-lg font-bold text-white">Ações Rápidas</h2>
       </template>
       
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <UButton
+        <CvButton
           to="/admin/users"
           color="blue"
           variant="soft"
@@ -76,8 +76,8 @@
           block
         >
           Gerenciar Usuários
-        </UButton>
-        <UButton
+        </CvButton>
+        <CvButton
           to="/admin/parlays"
           color="orange"
           variant="soft"
@@ -85,8 +85,8 @@
           block
         >
           Todos os Parlays
-        </UButton>
-        <UButton
+        </CvButton>
+        <CvButton
           color="green"
           variant="soft"
           icon="i-heroicons-arrow-path"
@@ -95,28 +95,28 @@
           @click="syncData"
         >
           Sincronizar Dados
-        </UButton>
+        </CvButton>
       </div>
-    </UCard>
+    </CvCard>
 
     <!-- Recent Users -->
-    <UCard class="bg-gray-800 border-gray-700">
+    <CvCard class="bg-gray-800 border-gray-700">
       <template #header>
         <div class="flex items-center justify-between">
           <h2 class="text-lg font-bold text-white">Usuários Recentes</h2>
-          <UButton
+          <CvButton
             to="/admin/users"
             color="gray"
             variant="ghost"
             size="sm"
           >
             Ver todos
-          </UButton>
+          </CvButton>
         </div>
       </template>
 
       <div v-if="usersStore.loading" class="space-y-4">
-        <USkeleton v-for="i in 5" :key="i" class="h-12 bg-gray-700" />
+        <CvSkeleton v-for="i in 5" :key="i" class="h-12 bg-gray-700" />
       </div>
 
       <div v-else-if="recentUsers.length === 0" class="text-center py-8">
@@ -143,22 +143,22 @@
               <td class="px-4 py-3 text-white">{{ user.name }}</td>
               <td class="px-4 py-3 text-gray-300">{{ user.email }}</td>
               <td class="px-4 py-3">
-                <UBadge
+                <CvBadge
                   :color="user.role === 'ADMIN' ? 'purple' : 'blue'"
                   variant="soft"
                   size="sm"
                 >
                   {{ user.role === 'ADMIN' ? 'Admin' : 'Usuário' }}
-                </UBadge>
+                </CvBadge>
               </td>
               <td class="px-4 py-3">
-                <UBadge
+                <CvBadge
                   :color="user.isActive ? 'green' : 'red'"
                   variant="soft"
                   size="sm"
                 >
                   {{ user.isActive ? 'Ativo' : 'Inativo' }}
-                </UBadge>
+                </CvBadge>
               </td>
               <td class="px-4 py-3 text-gray-400">
                 {{ formatDate(user.createdAt) }}
@@ -167,7 +167,7 @@
           </tbody>
         </table>
       </div>
-    </UCard>
+    </CvCard>
   </div>
 </template>
 

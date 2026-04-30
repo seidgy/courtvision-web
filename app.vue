@@ -4,8 +4,7 @@
       <NuxtPage />
     </NuxtLayout>
 
-    <!-- Toast Notifications -->
-    <UNotifications />
+    <!-- Toast Notifications (desabilitado - Nuxt UI removido) -->
   </div>
 </template>
 
@@ -13,7 +12,7 @@
 // Configurações globais da aplicação
 useHead({
   titleTemplate: (titleChunk) => {
-    return titleChunk ? `${titleChunk} | NBA Parlay Analyzer` : 'NBA Parlay Analyzer'
+    return titleChunk ? `${titleChunk} | CourtVision AI` : 'CourtVision AI'
   },
 })
 
